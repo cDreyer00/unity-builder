@@ -2,12 +2,13 @@ const app = require("express")();
 const wait = require("cdreyer-utilities");
 const bodyParser = require('body-parser');
 
+
 let makeBuild = {};
 
 app.use(bodyParser.json());
 
-app.get("/build", async (req, res)=>{
-    while(IsObjEmpty(makeBuild)){
+app.get("/build", async (req, res) => {
+    while (IsObjEmpty(makeBuild)) {
         await wait(1);
         continue;
     }
@@ -15,8 +16,8 @@ app.get("/build", async (req, res)=>{
     res.send(makeBuild);
 })
 
-app.post("/build", (req, res)=>{
-    const {build_name} = req.body;
+app.post("/build", (req, res) => {
+    const { build_name } = req.body;
     const current_date = new Date();
 
     makeBuild = {
@@ -24,10 +25,10 @@ app.post("/build", (req, res)=>{
         current_date
     }
 
-    res.send("making build");
+    res.send("build request sent");
 })
 
-function IsObjEmpty(obj){
+function IsObjEmpty(obj) {
     return Object.keys(obj).length === 0;
 }
 
