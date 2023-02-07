@@ -20,6 +20,9 @@ async function execute(){
     console.log(res);
     res = await git.commit("commit from nodejs simpleGit");
     console.log(res);
+    res = await git.push("origin main");
+    console.log(res);
+    //test
 }
 execute();
 
