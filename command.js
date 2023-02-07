@@ -12,7 +12,7 @@ const options = {
 // when setting all options in a single object
 const git = simpleGit(options);
 
-async function execute(){
+async function execute() {
     let res;
     res = await git.status();
     console.log(res);
@@ -20,7 +20,7 @@ async function execute(){
     console.log(res);
     res = await git.commit("commit from nodejs simpleGit");
     console.log(res);
-    res = await git.push("origin main");
+    res = await git.push("origin", "main");
     console.log(res);
     //test
 }
