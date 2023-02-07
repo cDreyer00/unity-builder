@@ -2,7 +2,6 @@ const app = require("express")();
 const wait = require("cdreyer-utilities");
 const bodyParser = require('body-parser');
 
-
 let makeBuild = {};
 
 app.use(bodyParser.json());
