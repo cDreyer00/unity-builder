@@ -4,7 +4,7 @@ const { simpleGit, SimpleGit, SimpleGitOptions, GitResponseError } = require('si
 class GitController {
 
     /**
- * Creates a git repo instance
+ * Creates a git repository instance
  *
  * @params   {repoPath, branch}
  */

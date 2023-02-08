@@ -6,7 +6,8 @@ async function run(){
 
     const thisRepo = new GitController({repoPath, branch});
 
-    await thisRepo.commitAll("commited from my own git class");
+    await thisRepo.commitAll("git class description updated");
+    await thisRepo.push();
 
 }
 
