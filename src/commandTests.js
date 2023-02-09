@@ -5,7 +5,7 @@ async function run(){
     let branch = "main";
 
     const thisRepo = new GitController({repoPath, branch});
-    const message = "commiting from the git-in-nodejs package"
+    const message = "building unity project from server"
 
     await thisRepo.commitAll(message);
     await thisRepo.push();
