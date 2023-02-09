@@ -5,8 +5,9 @@ async function run(){
     let branch = "main";
 
     const thisRepo = new GitController({repoPath, branch});
+    const message = "message var added"
 
-    await thisRepo.commitItem("test", "src");
+    await thisRepo.commitAll(message);
     await thisRepo.push();
     //test
 }
