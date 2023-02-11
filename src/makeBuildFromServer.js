@@ -1,24 +1,13 @@
 // "C:\Program Files\Unity\Hub\Editor\2022.2.4f1\Editor\Unity.exe" -batchmode -projectPath ./ -executeMethod Build.BuildGame
 
-// const projectPath = "C:/Users/crist/my-things/projects/Unity/remote-build"
-// const unityProcess = spawn("C:/Program Files/Unity/Hub/Editor/2022.2.4f1/Editor/Unity.exe", ['-batchmode', '-projectPath', projectPath, '-executeMethod', 'Build.BuildGame']);
-
-// unityProcess.stdout.on('data', (data) => {
-//   console.log(`stdout: ${data}`);
-// });
-
-// unityProcess.stderr.on('data', (data) => {
-//   console.error(`stderr: ${data}`);
-// });
-
-// unityProcess.on('close', (code) => {
-//   console.log(`child process exited with code ${code}`);
-// });
-
 const { spawn, exec } = require('child_process');
+const buildFileInProject = require('./buildScriptHandler');
 
 async function makeBuild(projectPath) {
     return new Promise((resolve, reject) => {
+        console.log("1");
+        buildFileInProject(projectPath);
+        console.log("3");
 
         const child = spawn("C:/Program Files/Unity/Hub/Editor/2022.2.4f1/Editor/Unity.exe", [
             '-batchmode',
@@ -49,9 +38,5 @@ async function makeBuild(projectPath) {
         console.log("making build");
     })
 };
-
-// makeBuild("C:/Users/crist/my-things/projects/Unity/remote-build")
-// .then(data => console.log(data))
-// .catch(err => console.log(err));
 
 module.exports = makeBuild
