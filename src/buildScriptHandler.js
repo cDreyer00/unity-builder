@@ -1,11 +1,10 @@
 const { match } = require("assert");
 const fs = require("fs");
 const fileName = 'Build.cs'
-const filePath = `./src/build_script/${fileName}`;
+const localFilePath = `./src/build_script/${fileName}`;
 
 
 function buildFileInProject(projectPath) {
-    console.log("2");
     if (!fileExistsInProject(projectPath)) {
         console.log("file does not exist, copying");
         copyFile(projectPath);
@@ -22,7 +21,7 @@ function buildFileInProject(projectPath) {
 }
 
 function fileExistsInProject(projectPath) {
-    return fs.existsSync(`${projectPath}/${fileName}`);
+    return fs.existsSync(`${projectPath}/Assets/${fileName}`);
 }
 
 
@@ -31,18 +30,18 @@ function sameFilesContent(projectPath) {
     let localContent;
     let projectContent;
 
-    localContent = fs.readFileSync(filePath, 'utf8')
-    projectContent = fs.readFileSync(`${projectPath}/${fileName}`, 'utf8')
+    localContent = fs.readFileSync(localFilePath, 'utf8')
+    projectContent = fs.readFileSync(`${projectPath}/Assets/${fileName}`, 'utf8')
 
     return projectContent == localContent;
 }
 
 function copyFile(projectPath) {
-    fs.copyFile(filePath, `${projectPath}/${fileName}`, (err) => { if (err) return console.log("ERR: ", err) });
+    fs.copyFile(localFilePath, `${projectPath}/Assets/${fileName}`, (err) => { if (err) return console.log("ERR: ", err) });
 }
 
 function removeFile(projectPath) {
-    fs.unlink(`${projectPath}/${fileName}`, (err) => { if (err) return console.log("ERR: ", err) });
+    fs.unlink(`${projectPath}/Assets/${fileName}`, (err) => { if (err) return console.log("ERR: ", err) });
 }
 
 module.exports = buildFileInProject;
