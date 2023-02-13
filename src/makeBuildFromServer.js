@@ -1,4 +1,4 @@
-// "C:\Program Files\Unity\Hub\Editor\2022.2.4f1\Editor\Unity.exe" -batchmode -projectPath ./ -executeMethod Build.BuildGame
+// "C:\Program Files\Unity\Hub\Editor\2022.2.4f1\Editor\Unity.exe" -batchmode -projectPath "C:/Users/crist/my-things/projects/Unity/remote-build" -executeMethod Build.BuildWindows 
 
 const { spawn, exec } = require('child_process');
 const buildFileInProject = require('./buildScriptHandler');
@@ -7,26 +7,28 @@ require("dotenv").config();
 async function makeBuild(projectPath) {
     return new Promise((resolve, reject) => {
         buildFileInProject(projectPath);
-        
-        let unityPath = process.env.UNITY_PATH
-        
-        // === WITH SCRIPT FILE ===
-        // const child = spawn(unityPath, [
-        //     '-batchmode',
-        //     '-projectPath',
-        //     projectPath,
-        //     '-executeMethod',
-        //     'Build.BuildGame'
-        // ]);
 
-        // === WITH COMMANDS ONLY ===
+        let unityPath = process.env.UNITY_PATH
+
+        // === WITH SCRIPT FILE ===
         const child = spawn(unityPath, [
             '-batchmode',
             '-projectPath',
             projectPath,
-            '-buildWindows64Player',
-            'C:/Users/crist/Desktop'
+            '-executeMethod',
+            'Build.BuildAndroid'
         ]);
+
+        // === WITH COMMANDS ONLY ===
+        // let buildTarget = "Android"
+        // const child = spawn(unityPath, [
+        //     '-batchmode',
+        //     '-projectPath',
+        //     projectPath,
+        //     '-buildTarget',
+        //     buildTarget,
+        //     'C:/Users/crist/Desktop'
+        // ]);
 
 
         child.stdout.on('data', (data) => {

@@ -1,36 +1,52 @@
 using UnityEditor;
-using UnityEngine;
 using UnityEditor.Build.Reporting;
-public class Build
+using UnityEngine;
+
+public static class Build
 {
-    // [MenuItem("MyTools/Windows Build With Postprocess")]
-    public static void BuildGame()
+
+    static void ExecuteBuild(BuildPlayerOptions buildPlayerOptions)
     {
-        BuildGame("C:/Users/crist/Desktop/build-test", "Tests");
+#if UNITY_EDITOR
+        BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+        if (report.summary.result == BuildResult.Succeeded)
+        {
+            Debug.Log("Build succeeded: " + buildPlayerOptions.locationPathName);
+            EditorApplication.Exit(0);
+        }
+        else
+        {
+            Debug.LogError("Build failed");
+            EditorApplication.Exit(1);
+        }
+#endif
     }
 
-    public static void BuildGame(string buildPath, string buildName)
+    [MenuItem("Build/Windows")]
+    public static void BuildWindows()
     {
+        string buildName = "buld-windows"; 
+        string buildPath = $"C:/Users/crist/Desktop/Builds/Windows/{buildName}.exe";
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
-        buildPlayerOptions.scenes = new[] { "Assets/Scene/SampleScene" };
-        buildPlayerOptions.locationPathName = "test-build-remote";
+        buildPlayerOptions.scenes = new[] { "Assets/Scenes/SampleScene.unity" };
+        buildPlayerOptions.locationPathName = buildPath;
         buildPlayerOptions.target = BuildTarget.StandaloneWindows;
         buildPlayerOptions.options = BuildOptions.None;
 
-        BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
-        BuildSummary summary = report.summary;
-
-        if (summary.result == BuildResult.Succeeded)
-        {
-            Debug.Log("Build succeeded: " + summary.totalSize + " bytes");
-        }
-
-        if (summary.result == BuildResult.Failed)
-        {
-            Debug.Log("Build failed");
-        }
-
-        Debug.Log("Bulding");
+        ExecuteBuild(buildPlayerOptions);
     }
 
+    [MenuItem("Build/Android")]
+    public static void BuildAndroid()
+    {
+        string buildName = "buld-android"; 
+        string buildPath = $"C:/Users/crist/Desktop/Builds/Android/{buildName}.apk";
+        BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
+        buildPlayerOptions.scenes = new[] { "Assets/Scenes/SampleScene.unity" };
+        buildPlayerOptions.locationPathName = buildPath;
+        buildPlayerOptions.target = BuildTarget.Android;
+        buildPlayerOptions.options = BuildOptions.None;
+
+        ExecuteBuild(buildPlayerOptions);
+    }
 }

@@ -3,6 +3,7 @@ const fs = require("fs");
 const fileName = 'Build.cs'
 const localFilePath = `./src/build_script/${fileName}`;
 
+const fullPathToFile = (projectPath) => `${projectPath}/Assets/Editor/${fileName}`
 
 function buildFileInProject(projectPath) {
     if (!fileExistsInProject(projectPath)) {
@@ -21,7 +22,7 @@ function buildFileInProject(projectPath) {
 }
 
 function fileExistsInProject(projectPath) {
-    return fs.existsSync(`${projectPath}/Assets/${fileName}`);
+    return fs.existsSync(fullPathToFile(projectPath));
 }
 
 
@@ -31,17 +32,17 @@ function sameFilesContent(projectPath) {
     let projectContent;
 
     localContent = fs.readFileSync(localFilePath, 'utf8')
-    projectContent = fs.readFileSync(`${projectPath}/Assets/${fileName}`, 'utf8')
+    projectContent = fs.readFileSync(fullPathToFile(projectPath), 'utf8')
 
     return projectContent == localContent;
 }
 
 function copyFile(projectPath) {
-    fs.copyFile(localFilePath, `${projectPath}/Assets/${fileName}`, (err) => { if (err) return console.log("ERR: ", err) });
+    fs.copyFile(localFilePath, fullPathToFile(projectPath), (err) => { if (err) return console.log("ERR: ", err) });
 }
 
 function removeFile(projectPath) {
-    fs.unlink(`${projectPath}/Assets/${fileName}`, (err) => { if (err) return console.log("ERR: ", err) });
+    fs.unlink(fullPathToFile(projectPath), (err) => { if (err) return console.log("ERR: ", err) });
 }
 
 module.exports = buildFileInProject;
