@@ -9,6 +9,7 @@ async function makeBuild(projectPath) {
         buildFileInProject(projectPath);
 
         let unityPath = process.env.UNITY_PATH
+        let buildTargets = ["Build.BuildWindows", "Build.BuildAndroid"]
 
         // === WITH SCRIPT FILE ===
         const child = spawn(unityPath, [
@@ -16,7 +17,7 @@ async function makeBuild(projectPath) {
             '-projectPath',
             projectPath,
             '-executeMethod',
-            'Build.BuildAndroid'
+            buildTargets[0]
         ]);
 
         // === WITH COMMANDS ONLY ===
@@ -55,4 +56,4 @@ async function makeBuild(projectPath) {
 
 module.exports = makeBuild
 
-makeBuild("C:/Users/crist/my-things/projects/Unity/remote-build")
+makeBuild("C:/Users/crist/Desktop/Kreativitas/Projetos/store-cards-and-packs")
