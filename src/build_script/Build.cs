@@ -4,6 +4,26 @@ using UnityEngine;
 
 public static class Build
 {
+    [MenuItem("Build/Windows")]
+    public static void BuildWindows()
+    {
+        BuildPlayerOptions buildPlayerOptions = BuildOptions("C:/Users/crist/Desktop/builds/Windows", "test-build", BuildTarget.Android);
+        ExecuteBuild(buildPlayerOptions);
+    }
+
+    [MenuItem("Build/Android")]
+    public static void BuildAndroid()
+    {
+        if (PlayerSettings.Android.useCustomKeystore)
+        {
+            PlayerSettings.Android.keystorePass = "MahjongMonsterArena@1";
+            PlayerSettings.Android.keyaliasPass = "MahjongMonsterArena@1";
+        }
+
+        BuildPlayerOptions buildPlayerOptions = BuildOptions("C:/Users/crist/Desktop/builds/Android", "test-build", BuildTarget.Android);
+
+        ExecuteBuild(buildPlayerOptions);
+    }
 
     static void ExecuteBuild(BuildPlayerOptions buildPlayerOptions)
     {
@@ -22,31 +42,28 @@ public static class Build
 #endif
     }
 
-    [MenuItem("Build/Windows")]
-    public static void BuildWindows()
+    static BuildPlayerOptions BuildOptions(string buildPath, string buildName, BuildTarget buildTarget)
     {
-        string buildName = "buld-windows"; 
-        string buildPath = $"C:/Users/crist/Desktop/Builds/Windows/{buildName}.exe";
+        string extension = buildTarget switch
+        {
+            BuildTarget.Android => "apk",
+            BuildTarget.StandaloneWindows => "exe",
+            _ => "exe",
+        };
+
+        string fullPath = $"${buildPath}/{buildName}.{extension}";
+
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
-        buildPlayerOptions.scenes = new[] { "Assets/Scenes/SampleScene.unity" };
+
         buildPlayerOptions.locationPathName = buildPath;
-        buildPlayerOptions.target = BuildTarget.StandaloneWindows;
-        buildPlayerOptions.options = BuildOptions.None;
+        buildPlayerOptions.target = buildTarget;
 
-        ExecuteBuild(buildPlayerOptions);
-    }
+        buildPlayerOptions.scenes = new string[EditorBuildSettings.scenes.Length];
+        for (int i = 0; i < EditorBuildSettings.scenes.Length; i++)
+        {
+            buildPlayerOptions.scenes[i] = EditorBuildSettings.scenes[i].path;
+        }
 
-    [MenuItem("Build/Android")]
-    public static void BuildAndroid()
-    {
-        string buildName = "buld-android"; 
-        string buildPath = $"C:/Users/crist/Desktop/Builds/Android/{buildName}.apk";
-        BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
-        buildPlayerOptions.scenes = new[] { "Assets/Scenes/SampleScene.unity" };
-        buildPlayerOptions.locationPathName = buildPath;
-        buildPlayerOptions.target = BuildTarget.Android;
-        buildPlayerOptions.options = BuildOptions.None;
-
-        ExecuteBuild(buildPlayerOptions);
+        return buildPlayerOptions;
     }
 }
