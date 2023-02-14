@@ -2,35 +2,17 @@
 
 const { spawn, exec } = require('child_process');
 const buildFileInProject = require('./buildScriptHandler');
+const checkKeystore = require('./keystoreHandler');
 require("dotenv").config();
 
-async function makeBuild(projectPath) {
+async function makeBuild(projectPath, buildTarget) {
     return new Promise((resolve, reject) => {
         buildFileInProject(projectPath);
+        const keystorePassword = checkKeystore(projectPath)
 
         let unityPath = process.env.UNITY_PATH
-        let buildTargets = ["Build.BuildWindows", "Build.BuildAndroid"]
 
-        // === WITH SCRIPT FILE ===
-        const child = spawn(unityPath, [
-            '-batchmode',
-            '-projectPath',
-            projectPath,
-            '-executeMethod',
-            buildTargets[0]
-        ]);
-
-        // === WITH COMMANDS ONLY ===
-        // let buildTarget = "Android"
-        // const child = spawn(unityPath, [
-        //     '-batchmode',
-        //     '-projectPath',
-        //     projectPath,
-        //     '-buildTarget',
-        //     buildTarget,
-        //     'C:/Users/crist/Desktop'
-        // ]);
-
+        const child = executeUnityProcess(unityPath, projectPath, buildTarget, keystorePassword)
 
         child.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);
@@ -43,6 +25,9 @@ async function makeBuild(projectPath) {
         child.on('close', (code) => {
             console.log(`child process exited with code ${code}`);
             resolve();
+            if (buildTarget == buildTargets.Windows) {
+                makeBuild("C:/Users/crist/my-things/projects/Unity/MOSNTERS-MAHJ", buildTargets.Android)
+            }
         });
 
         child.on('error', (error) => {
@@ -50,10 +35,41 @@ async function makeBuild(projectPath) {
             reject(error);
         });
 
-        console.log("making build");
+        console.log(`making ${buildTarget} build`);
     })
 };
 
-module.exports = makeBuild
+function executeUnityProcess(unityPath, projectPath, buildTarget, keystorePassword) {
+    if (keystorePassword) {
+        return spawn(unityPath, [
+            '-batchmode',
+            '-projectPath',
+            projectPath,
+            "-keystorePassword",
+            keystorePassword,
+            '-executeMethod',
+            buildTarget,
+            '-logFile',
+            'C:/Users/crist/Desktop/builds/log.txt',
+        ]);
+    }
 
-makeBuild("C:/Users/crist/Desktop/Kreativitas/Projetos/store-cards-and-packs")
+    return spawn(unityPath, [
+        '-batchmode',
+        '-projectPath',
+        projectPath,
+        '-executeMethod',
+        buildTarget,
+        '-logFile',
+        'C:/Users/crist/Desktop/builds/log.txt',
+    ]);
+}
+
+const buildTargets = {
+    Android: "Build.BuildAndroid",
+    Windows: "Build.BuildWindows"
+}
+
+makeBuild("C:/Users/crist/my-things/projects/Unity/MOSNTERS-MAHJ", buildTargets.Windows)
+
+module.exports = makeBuild

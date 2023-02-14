@@ -1,13 +1,14 @@
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+using System;
 
 public static class Build
 {
     [MenuItem("Build/Windows")]
     public static void BuildWindows()
     {
-        BuildPlayerOptions buildPlayerOptions = BuildOptions("C:/Users/crist/Desktop/builds/Windows", "test-build", BuildTarget.Android);
+        BuildPlayerOptions buildPlayerOptions = BuildOptions("C:/Users/crist/Desktop/builds/Windows", "test-build", BuildTarget.StandaloneWindows);
         ExecuteBuild(buildPlayerOptions);
     }
 
@@ -16,8 +17,11 @@ public static class Build
     {
         if (PlayerSettings.Android.useCustomKeystore)
         {
-            PlayerSettings.Android.keystorePass = "MahjongMonsterArena@1";
-            PlayerSettings.Android.keyaliasPass = "MahjongMonsterArena@1";
+            // string keystorePass = System.Environment.GetCommandLineArgs()[5];
+            string keystorePass = System.Environment.GetCommandLineArgs()[5];
+
+            PlayerSettings.Android.keystorePass = keystorePass;
+            PlayerSettings.Android.keyaliasPass = keystorePass;
         }
 
         BuildPlayerOptions buildPlayerOptions = BuildOptions("C:/Users/crist/Desktop/builds/Android", "test-build", BuildTarget.Android);
@@ -51,12 +55,13 @@ public static class Build
             _ => "exe",
         };
 
-        string fullPath = $"${buildPath}/{buildName}.{extension}";
+        string fullPath = $"{buildPath}/{buildName}.{extension}";
 
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
 
-        buildPlayerOptions.locationPathName = buildPath;
+        buildPlayerOptions.locationPathName = fullPath;
         buildPlayerOptions.target = buildTarget;
+        buildPlayerOptions.options = UnityEditor.BuildOptions.None;
 
         buildPlayerOptions.scenes = new string[EditorBuildSettings.scenes.Length];
         for (int i = 0; i < EditorBuildSettings.scenes.Length; i++)
