@@ -1,39 +1,66 @@
 const app = require("express")();
-const wait = require("cdreyer-utilities");
 const bodyParser = require('body-parser');
-const makeBuild = require('./src/makeBuildFromServer');
-const { cloneRepo } = require("./src/gitHandler");
+const { makeBuild, buildTargets } = require('./src/makeBuildFromServer');
+const { cloneRepo, updateRepo } = require("./src/gitHandler");
 
 require("dotenv").config();
-const PROJECTS_DIR = process.env.PROJECTS_DIR;
-console.log(PROJECTS_DIR);
+
+const PROJECTS_PATH = process.env.PROJECTS_PATH;
+
 
 app.use(bodyParser.json());
 
-app.post("/build", (req, res) => {
-    // const { projectName } = req.body;
-    const projectName = "remote-build";
-    let projectDir = `${PROJECTS_DIR}/${projectName}`
+app.post("/build", async (req, res) => {
+    try {
+        const projectName = req.body.projectName;
+        console.log(projectName);
+        const branch = req.body.branch || "main";
+        const buildTarget = req.body.buildTarget.toLowerCase();
 
-    makeBuild(projectDir)
-        .then(data => console.log(data))
-        .catch(err => console.log(err));
+        let projectDir = `${PROJECTS_PATH}/${projectName}`
+
+        await updateRepo(projectDir, branch);
+
+        let bt;
+        if(buildTarget == "windows"){
+            bt = buildTargets.Windows;
+        }
+        if(buildTarget == "android"){
+            bt = buildTargets.Android;
+        }
+
+        let buildRes = await makeBuild(projectDir, bt, projectName);
+
+        if(buildRes){
+            res.send(`Build for ${bt} completed`)
+        }
+
+    } catch (e) {
+        res.status(400).send(e.message)
+    }
+
 })
 
-app.post("/clone", (req,res)=>{
-    const repoURL = "https://github.com/cDreyer00/unity-build-from-server.git";
-    const projectName = "remote-build";
-    let projectDir = `${PROJECTS_DIR}/${projectName}`
-    cloneRepo(projectDir, repoURL);
+app.post("/clone", async (req, res) => {
+    const repoURL = req.body.repositoryURL;
+    const projectName = req.body.projectName;
+    let projectDir = `${PROJECTS_PATH}/${projectName}`
+    
+    try{
+        await cloneRepo(projectDir, repoURL);
+        res.send("Project added succesfully");
+    }catch(e){
+        res.status(400).send(e.message);
+    }
 })
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`))
 
-const repoURL = "https://gitlab.com/Kreativitas/monsters-mahj.git";
-const projectName = "MOSNTERS-MAHJ";
-let projectDir = `${PROJECTS_DIR}/${projectName}`
-// cloneRepo(projectDir, repoURL);
-makeBuild(projectDir)
-.then(data => console.log(data))
-.catch(err => console.log(err));
+// const repoURL = "https://gitlab.com/Kreativitas/monsters-mahj.git";
+// const projectName = "MOSNTERS-MAHJ";
+// let projectDir = `${PROJECTS_DIR}/${projectName}`
+// // cloneRepo(projectDir, repoURL);
+// makeBuild(projectDir)
+//     .then(data => console.log(data))
+//     .catch(err => console.log(err));

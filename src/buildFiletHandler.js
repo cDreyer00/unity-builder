@@ -42,7 +42,7 @@ function copyFile(projectPath) {
         fs.mkdirSync(`${projectPath}/Assets/Editor`);
     } catch (e) { }
     finally {
-        fs.copyFile(localFilePath, fullPathToFile(projectPath), (err) => { if (err) return console.log("ERR: ", err) });
+        fs.copyFile(localFilePath, fullPathToFile(projectPath), (err) => { if (err) throw new Error("ERR: ", err) });
     }
 }
 

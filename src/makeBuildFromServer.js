@@ -1,18 +1,22 @@
 // "C:\Program Files\Unity\Hub\Editor\2022.2.4f1\Editor\Unity.exe" -batchmode -projectPath "C:/Users/crist/my-things/projects/Unity/remote-build" -executeMethod Build.BuildWindows 
 
 const { spawn, exec } = require('child_process');
-const buildFileInProject = require('./buildScriptHandler');
+const buildFileInProject = require('./buildFiletHandler');
 const checkKeystore = require('./keystoreHandler');
 require("dotenv").config();
 
-async function makeBuild(projectPath, buildTarget) {
+const LOG_PATH = process.env.LOG_PATH + "/log.txt";
+const BUILDS_PATH = process.env.BUILDS_PATH;
+
+async function makeBuild(projectPath, buildTarget, projectName) {
     return new Promise((resolve, reject) => {
         buildFileInProject(projectPath);
+
         const keystorePassword = checkKeystore(projectPath)
 
         let unityPath = process.env.UNITY_PATH
 
-        const child = executeUnityProcess(unityPath, projectPath, buildTarget, keystorePassword)
+        const child = executeUnityProcess(unityPath, projectPath, projectName, buildTarget, keystorePassword)
 
         child.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);
@@ -23,34 +27,41 @@ async function makeBuild(projectPath, buildTarget) {
         });
 
         child.on('close', (code) => {
-            console.log(`child process exited with code ${code}`);
-            resolve();
-            if (buildTarget == buildTargets.Windows) {
-                makeBuild("C:/Users/crist/my-things/projects/Unity/MOSNTERS-MAHJ", buildTargets.Android)
+            if (code == 0) {
+                resolve(true);
+                reject(false);
             }
         });
 
         child.on('error', (error) => {
             console.error(`Error: ${error}`);
-            reject(error);
+            reject(false);
         });
 
-        console.log(`making ${buildTarget} build`);
+
+        console.log("building");
     })
 };
 
-function executeUnityProcess(unityPath, projectPath, buildTarget, keystorePassword) {
+function executeUnityProcess(unityPath, projectPath, projectName, buildTarget, keystorePassword) {
+    console.log(buildTarget);
+    let buildName = buildTarget == buildTargets.Android ? `${projectName}-android` : `${projectName}-windows`
+
     if (keystorePassword) {
         return spawn(unityPath, [
             '-batchmode',
             '-projectPath',
             projectPath,
-            "-keystorePassword",
-            keystorePassword,
             '-executeMethod',
             buildTarget,
             '-logFile',
-            'C:/Users/crist/Desktop/builds/log.txt',
+            LOG_PATH,
+            '-buildsPath',
+            BUILDS_PATH,
+            '-buildName',
+            buildName,
+            "-keystorePassword",
+            keystorePassword,
         ]);
     }
 
@@ -61,7 +72,7 @@ function executeUnityProcess(unityPath, projectPath, buildTarget, keystorePasswo
         '-executeMethod',
         buildTarget,
         '-logFile',
-        'C:/Users/crist/Desktop/builds/log.txt',
+        LOG_PATH,
     ]);
 }
 
@@ -70,6 +81,7 @@ const buildTargets = {
     Windows: "Build.BuildWindows"
 }
 
-makeBuild("C:/Users/crist/my-things/projects/Unity/MOSNTERS-MAHJ", buildTargets.Windows)
-
-module.exports = makeBuild
+module.exports = {
+    makeBuild,
+    buildTargets
+}

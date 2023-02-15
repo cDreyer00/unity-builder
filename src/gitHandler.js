@@ -1,20 +1,26 @@
 const GitController = require("git-in-nodejs");
 
-async function repoHandler(projectPath){
-    // const projectRepo = new GitController({repoPath: projectPath, branch: 'main'})
+async function updateRepo(projectPath, branch) {
+    
+    let repo = new GitController({repoPath: projectPath, branch: branch});
 
-    // projectPath
+    try{
+        await repo.push();
+    }catch(e){
+        throw new Error(e).message;
+    }
 }
 
-async function cloneRepo(projectPath, projectRepoURL){
-    console.log("============== CLONING ==============");
-    const repo = await GitController.clone(projectPath, projectRepoURL);
-    console.log("============== DONE ==============");
-    console.log(repo);
+async function cloneRepo(projectPath, projectRepoURL) {
+    try {
+        await GitController.clone({projectPath, projectRepoURL});
+    }
+    catch (e) {
+        throw new Error(e);
+    }
 }
-
 
 module.exports = {
     cloneRepo,
-    repoHandler
+    updateRepo
 }
