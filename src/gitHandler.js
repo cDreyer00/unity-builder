@@ -13,7 +13,7 @@ async function updateRepo(projectPath, branch) {
 
 async function cloneRepo(projectPath, projectRepoURL) {
     try {
-        await GitController.clone({projectPath, projectRepoURL});
+        await GitController.clone(projectPath, projectRepoURL);
     }
     catch (e) {
         throw new Error(e);

@@ -7,8 +7,11 @@ require("dotenv").config();
 
 const PROJECTS_PATH = process.env.PROJECTS_PATH;
 
-
 app.use(bodyParser.json());
+
+app.get('/',(req,res) =>{
+    res.send("hello from server")
+})
 
 app.post("/build", async (req, res) => {
     try {
@@ -45,7 +48,6 @@ app.post("/clone", async (req, res) => {
     const repoURL = req.body.repositoryURL;
     const projectName = req.body.projectName;
     let projectDir = `${PROJECTS_PATH}/${projectName}`
-    
     try{
         await cloneRepo(projectDir, repoURL);
         res.send("Project added succesfully");
