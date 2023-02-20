@@ -9,37 +9,33 @@ const PROJECTS_PATH = process.env.PROJECTS_PATH;
 
 app.use(bodyParser.json());
 
-app.get('/',(req,res) =>{
+app.get('/', (req, res) => {
     res.send("hello from server")
 })
 
 app.post("/build", async (req, res) => {
-    try {
-        const projectName = req.body.projectName;
-        console.log(projectName);
-        const branch = req.body.branch || "main";
-        const buildTarget = req.body.buildTarget.toLowerCase();
+    const projectName = req.body.projectName;
+    const branch = req.body.branch || "main";
+    const buildTarget = req.body.buildTarget.toLowerCase();
 
-        let projectDir = `${PROJECTS_PATH}/${projectName}`
+    let projectDir = `${PROJECTS_PATH}/${projectName}`
 
-        await updateRepo(projectDir, branch);
+    await updateRepo(projectDir, branch)
+        .then(data => console.log(data))
+        .catch(err => console.log(err));
 
-        let bt;
-        if(buildTarget == "windows"){
-            bt = buildTargets.Windows;
-        }
-        if(buildTarget == "android"){
-            bt = buildTargets.Android;
-        }
+    let bt;
+    if (buildTarget == "windows") {
+        bt = buildTargets.Windows;
+    }
+    if (buildTarget == "android") {
+        bt = buildTargets.Android;
+    }
 
-        let buildRes = await makeBuild(projectDir, bt, projectName);
+    const buildRes = await makeBuild(projectDir, bt, projectName);
 
-        if(buildRes){
-            res.send(`Build for ${bt} completed`)
-        }
-
-    } catch (e) {
-        res.status(400).send(e.message)
+    if (buildRes) {
+        res.send(`Build for ${bt} completed`)
     }
 
 })
@@ -48,10 +44,10 @@ app.post("/clone", async (req, res) => {
     const repoURL = req.body.repositoryURL;
     const projectName = req.body.projectName;
     let projectDir = `${PROJECTS_PATH}/${projectName}`
-    try{
+    try {
         await cloneRepo(projectDir, repoURL);
         res.send("Project added succesfully");
-    }catch(e){
+    } catch (e) {
         res.status(400).send(e.message);
     }
 })

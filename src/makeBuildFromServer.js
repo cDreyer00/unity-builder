@@ -73,6 +73,10 @@ function executeUnityProcess(unityPath, projectPath, projectName, buildTarget, k
         buildTarget,
         '-logFile',
         LOG_PATH,
+        '-buildsPath',
+        BUILDS_PATH,
+        '-buildName',
+        buildName,
     ]);
 }
 
