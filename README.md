@@ -23,3 +23,19 @@ Before running this software, make sure that you have the following dependencies
     - Rename the "template.env" file to ".env".
 
 4. Now you can see if the server is working by opening the terminal in this folder and typing: `npm run start`.
+
+These steps are to run the server locally. To host the server on the web keep tracking the on next
+
+# Host on the web
+
+1. Open the terminal and type:
+
+        `npm install -g localtunnel`
+
+2. In the terminal at the server folder, run:
+    
+    - change the port value to be the same as you set on the ".env" file
+        
+            `lt --port 3000`
+
+This will provide a url that will redirect the web requests to the server running locally.
