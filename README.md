@@ -11,8 +11,11 @@ here are a list of all things that should have in the machine.
 
 # Setup and run
 1. donwload this project and place it anywhere in the machine to be the server
-2. install npm dependencies
-    
+
+2. install npm dependencies    
+
         `npm install`
 
-3. 
+3. open the "template.env" file and edit the values accoding to it descriptions, then remove the "template" from the file name setting just as ".env"
+
+4. 
