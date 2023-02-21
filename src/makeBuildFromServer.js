@@ -28,7 +28,10 @@ async function makeBuild(projectPath, buildTarget, projectName) {
 
         child.on('close', (code) => {
             if (code == 0) {
+                //TODO: retrieve important data from de buld (name, plataform...) 
                 resolve(true);
+            }
+            else{
                 reject(false);
             }
         });

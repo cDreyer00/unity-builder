@@ -13,7 +13,7 @@ const BUILDS_PATH = process.env.BUILDS_PATH;
 app.use(bodyParser.json());
 
 app.get('/', async (req, res) => {
-
+    res.send("server running")
 })
 
 app.post("/build", async (req, res) => {
@@ -44,6 +44,7 @@ app.post("/build", async (req, res) => {
     }
 
     try {
+        // TODO: change the buildpPath to be the buildRes.buildPath retrieved data
         let buildPath = `${BUILDS_PATH}/${projectName}.apk`
         await uploadFile(buildPath, projectName + '.apk');
 
@@ -69,11 +70,3 @@ app.post("/clone", async (req, res) => {
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`))
-
-// const repoURL = "https://gitlab.com/Kreativitas/monsters-mahj.git";
-// const projectName = "MOSNTERS-MAHJ";
-// let projectDir = `${PROJECTS_DIR}/${projectName}`
-// // cloneRepo(projectDir, repoURL);
-// makeBuild(projectDir)
-//     .then(data => console.log(data))
-//     .catch(err => console.log(err));

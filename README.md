@@ -1,21 +1,25 @@
 # Overview
-This is a web server that, at given instructions, download data from a Unity project git repository, executes a backend process to make a build from the project, and exports it to a google drive folder.
-
-Next is how setup and run the server.
+This software automates the build process for Unity projects. At given instructions, the server will download data from a Unity project Git repository, execute a background process to make a build, and export it to a Google Drive folder.
 
 # Dependencies
-here are a list of all things that should have in the machine.
-
-- [Unity Engine and a Unity Editor](https://unity.com/pt)
+Before running this software, make sure that you have the following dependencies installed on your machine:
+    
+- Unity Engine
+    - you can download the [Unity hub](https://unity.com/download) and after that a unity editor inside the hub, or, install directly a [Unity Editor](https://unity.com/releases/editor/archive) version
+    
 - [NodeJS](https://nodejs.org/en/)
 
 # Setup and run
-1. donwload this project and place it anywhere in the machine to be the server
+1. Download this project and place it anywhere on your machine to be the server.
 
-2. install npm dependencies    
+2. Open the terminal and install the required npm dependencies: 
 
         `npm install`
 
-3. open the "template.env" file and edit the values accoding to it descriptions, then remove the "template" from the file name setting just as ".env"
+3. Configure the .env file:
+    
+    - Edit the options values in the "template.env" file according to the descriptions provided above each option.
 
-4. 
+    - Rename the "template.env" file to ".env".
+
+4. Now you can see if the server is working by opening the terminal in this folder and typing: `npm run start`.
