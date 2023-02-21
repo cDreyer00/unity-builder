@@ -45,7 +45,8 @@ async function makeBuild(projectPath, buildTarget, projectName) {
 
 function executeUnityProcess(unityPath, projectPath, projectName, buildTarget, keystorePassword) {
     console.log(buildTarget);
-    let buildName = buildTarget == buildTargets.Android ? `${projectName}-android` : `${projectName}-windows`
+    // let buildName = buildTarget == buildTargets.Android ? `${projectName}` : `${projectName}`
+    let buildName = projectName;
 
     if (keystorePassword) {
         return spawn(unityPath, [

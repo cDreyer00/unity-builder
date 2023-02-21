@@ -2,15 +2,18 @@ const app = require("express")();
 const bodyParser = require('body-parser');
 const { makeBuild, buildTargets } = require('./src/makeBuildFromServer');
 const { cloneRepo, updateRepo } = require("./src/gitHandler");
+const wait = require("cdreyer-utilities");
+const uploadFile = require("./src/googleDriveHandler");
 
 require("dotenv").config();
 
 const PROJECTS_PATH = process.env.PROJECTS_PATH;
+const BUILDS_PATH = process.env.BUILDS_PATH;
 
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-    res.send("hello from server")
+app.get('/', async (req, res) => {
+
 })
 
 app.post("/build", async (req, res) => {
@@ -20,9 +23,11 @@ app.post("/build", async (req, res) => {
 
     let projectDir = `${PROJECTS_PATH}/${projectName}`
 
-    await updateRepo(projectDir, branch)
-        .then(data => console.log(data))
-        .catch(err => console.log(err));
+    try {
+        await updateRepo(projectDir, branch);
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
 
     let bt;
     if (buildTarget == "windows") {
@@ -34,8 +39,18 @@ app.post("/build", async (req, res) => {
 
     const buildRes = await makeBuild(projectDir, bt, projectName);
 
-    if (buildRes) {
-        res.send(`Build for ${bt} completed`)
+    if (!buildRes) {
+        return res.status(500).send(`something went wrong during the build process, see the log for more informations`)
+    }
+
+    try {
+        let buildPath = `${BUILDS_PATH}/${projectName}.apk`
+        await uploadFile(buildPath, projectName + '.apk');
+
+        return res.send("build completed and uploaded to drive");
+    }
+    catch (err) {
+        return res.status(500).send(err.message)
     }
 
 })
