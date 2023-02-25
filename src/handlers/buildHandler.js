@@ -1,7 +1,7 @@
 // "C:\Program Files\Unity\Hub\Editor\2022.2.4f1\Editor\Unity.exe" -batchmode -projectPath "C:/Users/crist/my-things/projects/Unity/remote-build" -executeMethod Build.BuildWindows 
 
 const { spawn, exec } = require('child_process');
-const buildFileInProject = require('./buildFiletHandler');
+const buildFileInProject = require('./buildFileHandler');
 const checkKeystore = require('./keystoreHandler');
 require("dotenv").config();
 
