@@ -35,9 +35,6 @@ async function build(req, res) {
     }
 
     try {
-        // TODO: change the buildpPath to be the buildRes.buildPath retrieved data
-        let fileType = bt == buildTargets.Android ? 'apk': ''; 
-        console.log(`FILE TYPE => ${fileType}`);
         let buildName = `${buildRes.buildName}.${fileType}`;
         let buildPath = `${BUILDS_PATH}/${buildName}`
         await uploadFile(buildPath, buildName);

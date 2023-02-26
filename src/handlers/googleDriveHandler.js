@@ -3,11 +3,12 @@ const fs = require('fs');
 const { google } = require('googleapis');
 
 const FOLDER_ID = process.env.DRIVE_FOLDER_ID;
+const GCAPI_KEY_PATH = process.env.GCAPI_KEY_PATH;
 
 async function uploadFile(filePath, fileName) {
     try {
         const auth = new google.auth.GoogleAuth({
-            keyFile: './credentials.json',
+            keyFile: GCAPI_KEY_PATH,
             scopes: ['https://www.googleapis.com/auth/drive']
         })
 

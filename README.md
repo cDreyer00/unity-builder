@@ -1,5 +1,5 @@
 # Overview
-This software automates the build process for Unity projects. At given instructions, the server will download data from a Unity project Git repository, execute a background process to make a build, and export it to a Google Drive folder.
+This is a server application that automates the build process for Unity projects. At given instructions, the server will download data from a Unity project Git repository, execute a background process to make a build, and export it to a Google Drive folder.
 
 # Dependencies
 Before running this software, make sure that you have the following dependencies installed on your machine:
@@ -9,10 +9,12 @@ Before running this software, make sure that you have the following dependencies
     
 - [NodeJS](https://nodejs.org/en/)
 
-# Setup and run
-1. Download this project and place it anywhere on your machine to be the server.
+- A project in [Google Cloud](https://console.cloud.google.com/) with [Google Drive API](https://console.cloud.google.com/flows/enableapi?apiid=drive.googleapis.com) enabled
 
-2. Open the terminal and install the required npm dependencies: 
+# Setup and run
+1. Download this project and place it anywhere.
+
+2. Open the terminal project folder and install the required npm dependencies: 
 
         `npm install`
 
@@ -22,11 +24,12 @@ Before running this software, make sure that you have the following dependencies
 
     - Rename the "template.env" file to ".env".
 
-4. Now you can see if the server is working by opening the terminal in this folder and typing: `npm run start`.
+4. Run the server in the terminal: 
+        
+        `npm run start`
 
-These steps are to run the server locally. To host the server on the web keep tracking the on next
 
-# Host on the web
+# Host server
 
 1. Open the terminal and type:
 
