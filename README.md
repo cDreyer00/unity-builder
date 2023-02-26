@@ -27,18 +27,3 @@ Before running this software, make sure that you have the following dependencies
 4. Run the server in the terminal: 
         
         `npm run start`
-
-
-# Host server
-
-1. Open the terminal and type:
-
-        `npm install -g localtunnel`
-
-2. In the terminal at the server folder, run:
-    
-    - change the port value to be the same as you set on the ".env" file
-        
-            `lt --port 3000`
-
-This will provide a url that will redirect the web requests to the server running locally.
