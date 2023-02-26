@@ -1,12 +1,12 @@
 // "C:\Program Files\Unity\Hub\Editor\2022.2.4f1\Editor\Unity.exe" -batchmode -projectPath "C:/Users/crist/my-things/projects/Unity/remote-build" -executeMethod Build.BuildWindows 
-
+require("dotenv").config();
 const { spawn, exec } = require('child_process');
 const buildFileInProject = require('./buildFileHandler');
 const checkKeystore = require('./keystoreHandler');
-require("dotenv").config();
 
 const LOG_PATH = process.env.LOG_PATH + "/log.txt";
 const BUILDS_PATH = process.env.BUILDS_PATH;
+const unityPath = process.env.UNITY_PATH
 
 async function makeBuild(projectPath, buildTarget, projectName) {
     return new Promise((resolve, reject) => {
@@ -14,31 +14,35 @@ async function makeBuild(projectPath, buildTarget, projectName) {
 
         const keystorePassword = checkKeystore(projectPath)
 
-        let unityPath = process.env.UNITY_PATH
 
-        const child = executeUnityProcess(unityPath, projectPath, projectName, buildTarget, keystorePassword)
+        const {process, buildName} = executeUnityProcess(unityPath, projectPath, projectName, buildTarget, keystorePassword)
 
-        child.stdout.on('data', (data) => {
+        process.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);
         });
 
-        child.stderr.on('data', (data) => {
+        process.stderr.on('data', (data) => {
             console.log(`stderr: ${data}`);
         });
 
-        child.on('close', (code) => {
+        process.on('close', (code) => {
             if (code == 0) {
                 //TODO: retrieve important data from de buld (name, plataform...) 
-                resolve(true);
+                const data = {
+                    buildPath: `${BUILDS_PATH}/${buildName}`,
+                    buildName
+                }
+
+                resolve(data);
             }
-            else{
-                reject(false);
+            else {
+                reject();
             }
         });
 
-        child.on('error', (error) => {
+        process.on('error', (error) => {
             console.error(`Error: ${error}`);
-            reject(false);
+            reject();
         });
 
 
@@ -46,43 +50,71 @@ async function makeBuild(projectPath, buildTarget, projectName) {
     })
 };
 
+
 function executeUnityProcess(unityPath, projectPath, projectName, buildTarget, keystorePassword) {
-    console.log(buildTarget);
-    // let buildName = buildTarget == buildTargets.Android ? `${projectName}` : `${projectName}`
-    let buildName = projectName;
+
+    const curDate = new Date();
+    const date = {
+        year: curDate.getFullYear(),
+        month: curDate.getMonth() + 1,
+        day: curDate.getDate(),
+        hours: curDate.getHours(),
+        minutes: curDate.getMinutes()
+    };
+
+    let buildName = `${projectName}_${date.year}${date.month}${date.day}`
+    let process;
 
     if (keystorePassword) {
-        return spawn(unityPath, [
+        process = spawn(unityPath, [
             '-batchmode',
+
             '-projectPath',
             projectPath,
+
             '-executeMethod',
             buildTarget,
+
             '-logFile',
             LOG_PATH,
+
             '-buildsPath',
             BUILDS_PATH,
+
             '-buildName',
             buildName,
+
             "-keystorePassword",
             keystorePassword,
-        ]);
+        ])
+    }
+    else {
+        process = spawn(unityPath, [
+            '-batchmode',
+
+            '-projectPath',
+            projectPath,
+
+            '-executeMethod',
+            buildTarget,
+
+            '-logFile',
+            LOG_PATH,
+
+            '-buildsPath',
+            BUILDS_PATH,
+
+            '-buildName',
+            buildName,
+        ])
     }
 
-    return spawn(unityPath, [
-        '-batchmode',
-        '-projectPath',
-        projectPath,
-        '-executeMethod',
-        buildTarget,
-        '-logFile',
-        LOG_PATH,
-        '-buildsPath',
-        BUILDS_PATH,
-        '-buildName',
+    return {
+        process,
         buildName,
-    ]);
+    }
 }
+
 
 const buildTargets = {
     Android: "Build.BuildAndroid",

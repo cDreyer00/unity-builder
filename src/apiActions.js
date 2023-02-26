@@ -27,7 +27,7 @@ async function build(req, res) {
     if (buildTarget == "android") {
         bt = buildTargets.Android;
     }
-
+    
     const buildRes = await makeBuild(projectDir, bt, projectName);
 
     if (!buildRes) {
@@ -36,8 +36,11 @@ async function build(req, res) {
 
     try {
         // TODO: change the buildpPath to be the buildRes.buildPath retrieved data
-        let buildPath = `${BUILDS_PATH}/${projectName}.apk`
-        await uploadFile(buildPath, projectName + '.apk');
+        let fileType = bt == buildTargets.Android ? 'apk': ''; 
+        console.log(`FILE TYPE => ${fileType}`);
+        let buildName = `${buildRes.buildName}.${fileType}`;
+        let buildPath = `${BUILDS_PATH}/${buildName}`
+        await uploadFile(buildPath, buildName);
 
         return res.send("build completed and uploaded to drive");
     }
