@@ -1,13 +1,12 @@
-require("dotenv").config();
-const { makeBuild, buildTargets } = require('./handlers/buildHandler');
-const { cloneRepo, updateRepo } = require("./handlers/gitHandler");
-const wait = require("cdreyer-utilities");
-const uploadFile = require("./handlers/googleDriveHandler");
+const { makeBuild, buildTargets } = require('../handlers/buildHandler');
+const { updateRepo } = require("../handlers/gitHandler");
+const uploadFile = require("../handlers/googleDriveHandler");
 
 const PROJECTS_PATH = process.env.PROJECTS_PATH;
 const BUILDS_PATH = process.env.BUILDS_PATH;
 
 async function build(req, res) {
+
     const projectName = req.body.projectName;
     const branch = req.body.branch || "main";
     const buildTarget = req.body.buildTarget.toLowerCase();
@@ -27,7 +26,7 @@ async function build(req, res) {
     if (buildTarget == "android") {
         bt = buildTargets.Android;
     }
-    
+
     const buildRes = await makeBuild(projectDir, bt, projectName);
 
     if (!buildRes) {
@@ -47,22 +46,4 @@ async function build(req, res) {
 
 }
 
-async function downloadGitProject(req, res) {
-    const repoURL = req.body.repositoryURL;
-    const projectName = req.body.projectName;
- 
-    let projectDir = `${PROJECTS_PATH}/${projectName}`
- 
-    try {
-        await cloneRepo(projectDir, repoURL);
-        res.send("Project added succesfully");
-    } catch (e) {
-        res.status(400).send(e.message);
-    }
-}
-
-
-module.exports = {
-    build,
-    downloadGitProject
-}
+module.exports = build
