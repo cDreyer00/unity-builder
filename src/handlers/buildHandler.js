@@ -27,7 +27,6 @@ async function makeBuild(projectPath, buildTarget, projectName) {
 
         process.on('close', (code) => {
             if (code == 0) {
-                //TODO: retrieve important data from de buld (name, plataform...) 
                 const data = {
                     buildPath: `${BUILDS_PATH}/${buildName}`,
                     buildName

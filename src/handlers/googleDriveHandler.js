@@ -5,37 +5,39 @@ const { google } = require('googleapis');
 const FOLDER_ID = process.env.DRIVE_FOLDER_ID;
 const GCAPI_KEY_PATH = process.env.GCAPI_KEY_PATH;
 
-async function uploadFile(filePath, fileName) {
-    try {
-        const auth = new google.auth.GoogleAuth({
-            keyFile: GCAPI_KEY_PATH,
-            scopes: ['https://www.googleapis.com/auth/drive']
-        })
+function uploadFile(filePath, fileName) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const auth = new google.auth.GoogleAuth({
+                keyFile: GCAPI_KEY_PATH,
+                scopes: ['https://www.googleapis.com/auth/drive']
+            })
 
-        const driveService = google.drive({
-            version: "v3",
-            auth
-        })
+            const driveService = google.drive({
+                version: "v3",
+                auth
+            })
 
-        const metaData = {
-            'name': fileName,
-            'parents': [FOLDER_ID]
+            const metaData = {
+                'name': fileName,
+                'parents': [FOLDER_ID]
+            }
+
+            const file = {
+                body: fs.createReadStream(filePath)
+            }
+
+            const response = await driveService.files.create({
+                resource: metaData,
+                media: file,
+            })
+            
+            resolve(response);
         }
-
-        const file = {
-            body: fs.createReadStream(filePath)
+        catch (e) {
+            reject(e);
         }
-
-        const response = await driveService.files.create({
-            resource: metaData,
-            media: file
-        })
-
-        return response;
-    }
-    catch (err) {
-        throw new Error(err);
-    }
+    })
 }
 
 module.exports = uploadFile;
