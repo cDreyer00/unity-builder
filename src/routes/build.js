@@ -1,7 +1,7 @@
 const { json } = require('express');
-const { makeBuild, buildTargets } = require('../handlers/buildHandler');
-const { updateRepo } = require("../handlers/gitHandler");
-const uploadFile = require("../handlers/googleDriveHandler");
+const { makeBuild, buildTargets } = require('../handlers/build/buildHandler');
+const { updateRepo } = require("../handlers/git/gitHandler");
+const uploadFile = require("../handlers/google/googleDriveHandler");
 
 const PROJECTS_PATH = process.env.PROJECTS_PATH;
 const BUILDS_PATH = process.env.BUILDS_PATH;

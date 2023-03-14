@@ -24,9 +24,5 @@ const PORT = process.env.PORT || 3000
 server.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`))
 
 // initialize websocket
-const initws =  require("./src/handlers/websocketHandler.js")
+const initws =  require("./src/handlers/ws/websocketHandler")
 initws(server);
-
-// initialize discord bot
-const initds = require('./src/handlers/discordbotHandler.js')
-initds()

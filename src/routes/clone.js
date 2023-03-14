@@ -1,4 +1,4 @@
-const { cloneRepo } = require("../handlers/gitHandler");
+const { cloneRepo } = require("../handlers/git/gitHandler");
 
 const PROJECTS_PATH = process.env.PROJECTS_PATH;
 
