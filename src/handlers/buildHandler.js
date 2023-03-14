@@ -12,10 +12,9 @@ async function makeBuild(projectPath, buildTarget, projectName) {
     return new Promise((resolve, reject) => {
         buildFileInProject(projectPath);
 
-        const keystorePassword = checkKeystore(projectPath)
+        const keystorePassword = checkKeystore(projectPath);
 
-
-        const {process, buildName} = executeUnityProcess(unityPath, projectPath, projectName, buildTarget, keystorePassword)
+        const { process, buildName } = executeUnityProcess(unityPath, projectPath, projectName, buildTarget, keystorePassword)
 
         process.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);
@@ -61,7 +60,7 @@ function executeUnityProcess(unityPath, projectPath, projectName, buildTarget, k
         minutes: curDate.getMinutes()
     };
 
-    let buildName = `${projectName}_${date.year}${date.month}${date.day}`
+    let buildName = `${projectName}_${date.year}-${date.month}-${date.day}`
     let process;
 
     if (keystorePassword) {
