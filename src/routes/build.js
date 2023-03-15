@@ -33,6 +33,10 @@ async function build(req, res) {
         bt = buildTargets.Android;
     }
 
+    if (!bt) {
+        return res.status(400).send("build target not provided")
+    }
+
     // executes build
     let buildRes;
     try {
