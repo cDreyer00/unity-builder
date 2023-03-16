@@ -1,5 +1,3 @@
-const { cloneRepo } = require("../handlers/git/gitHandler");
-
 const LOG_PATH = process.env.LOG_PATH;
 
 async function sendLog(req, res) {
