@@ -6,6 +6,7 @@ const { createServer } = require("http")
 // import routes
 const build = require("./src/routes/build");
 const clone = require("./src/routes/clone");
+const log = require("./src/routes/log");
 const test = require("./src/routes/test");
 
 const app = express();
@@ -16,6 +17,8 @@ app.use(express.json());
 app.get('/', async (req, res) => {
     res.send("server running")
 })
+app.get("/log", log)
+
 app.post("/build", build)
 app.post("/clone", clone)
 app.post("/test", test)

@@ -35,6 +35,7 @@ function uploadFile(filePath, fileName) {
             resolve(response);
         }
         catch (e) {
+            console.log(e);
             reject(e);
         }
     })
