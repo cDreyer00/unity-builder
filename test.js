@@ -1,11 +1,10 @@
-const curDate = new Date();
+// const test = require('test')
 
-const date = {
-    year: curDate.getFullYear(),
-    month: curDate.getMonth() + 1,
-    day: curDate.getDate(),
-    hours: curDate.getHours(),
-    minutes: curDate.getMinutes()
-};
 
-console.log(`${date.year}${date.month}${date.day}`);
+function add(a, b) {
+    return a + b;
+}
+
+test('addiction', () => {
+    expect(add(1, 2)).toBe(3);
+});

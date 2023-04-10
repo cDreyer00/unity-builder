@@ -42,6 +42,7 @@ async function build(req, res) {
     try {
         buildRes = await makeBuild(projectDir, bt, projectName);
     } catch (e) {
+        console.log(e)
         return res.status(500).send(`Something went wrong during the build process, see the log for more information`);
     }
     console.log("build done and succeeded");

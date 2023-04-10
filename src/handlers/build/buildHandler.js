@@ -13,6 +13,7 @@ async function makeBuild(projectPath, buildTarget, projectName) {
         buildFileInProject(projectPath);
 
         const keystorePassword = checkKeystore(projectPath);
+        console.log(`keystore -> ${keystorePassword}`)
 
         const { process, buildName } = executeUnityProcess(unityPath, projectPath, projectName, buildTarget, keystorePassword)
 
